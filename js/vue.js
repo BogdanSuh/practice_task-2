@@ -12,7 +12,6 @@
   var emptyObject = Object.freeze({});
   var isArray = Array.isArray;
   // These helpers produce better VM code in JS engines due to their
-  // explicitness and function inlining.
   function isUndef(v) {
       return v === undefined || v === null;
   }
