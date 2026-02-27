@@ -14,7 +14,7 @@ Vue.component('Card', {
                 <span :class="{ completed: item.completed }">{{ item.text }}</span>
             </li>
         </ul>
-        <div v-if="card.completedDate">
+        <div v-if="card.completedDate" style="font-size: 0.8em; color: #888; margin-top: 5px;">
             Завершено: {{ card.completedDate }}
         </div>
     </div>
@@ -29,12 +29,11 @@ Vue.component('Card', {
         updateCompletion() {
             this.$emit('update-completion', this.card.id);
         },
-
         markAsDone() {
             this.$emit('mark-as-done', this.card.id);
         },
     }
-})
+});
 
 Vue.component('column', {
     template: `
@@ -44,9 +43,11 @@ Vue.component('column', {
                 @update-completion="handleUpdateCompletion(card.id)"
                 @mark-as-done="handleMarkAsDone(card.id)" />
         </div>
+        <div v-if="cards.length === 0" style="text-align: center; color: #aaa; padding: 20px;">
+            Пусто
+        </div>
     </div>
     `,
-
     props: {
         cards: Array,
         columnIndex: Number,
@@ -62,36 +63,52 @@ Vue.component('column', {
             this.$emit('mark-as-done', cardId);
         },
     },
-})
+});
 
 Vue.component('notepad', {
     template: `
-        <div class="notepad">
-            <column
-                v-for="(column, index) in columns"
-                :key="index"
-                :cards="column.cards"
-                :columnIndex="index"
-                @move-card="moveCard"
-                @update-completion="handleUpdateCompletion"
-                @mark-as-done="handleMarkAsDone"
-             />
-            <div class="card-creator">
-                <textarea v-model="newCardContent" placeholder="Введите заголовок карточки"></textarea>
-                <ul>
-                    <li v-for="(item, index) in newCardItems" :key="index">
-                        <input v-model="item.text" placeholder="Введите пункт" :disabled="isCardLocked" />
-                        <button @click="removeItem(index)" :disabled="isCardLocked">Удалить</button>
-                    </li>
-                </ul>
-                <button @click="addItem" :disabled="isCardLocked || newCardItems.length >= 5">Добавить пункт</button>
-                <button @click="addCard" :disabled="isAddCardDisabled">Добавить карточку</button>
-                <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+        <div>
+            <!-- Поле поиска -->
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    v-model="searchQuery" 
+                    class="search-input" 
+                    placeholder="Поиск по названию карточки..." 
+                />
+            </div>
+
+            <div class="notepad">
+                <!-- Используем filteredColumns вместо columns -->
+                <column
+                    v-for="(column, index) in filteredColumns"
+                    :key="index"
+                    :cards="column.cards"
+                    :columnIndex="index"
+                    @move-card="moveCard"
+                    @update-completion="handleUpdateCompletion"
+                    @mark-as-done="handleMarkAsDone"
+                 />
+                 
+                <div class="card-creator">
+                    <h3>Создать карточку</h3>
+                    <textarea v-model="newCardContent" placeholder="Введите заголовок карточки"></textarea>
+                    <ul>
+                        <li v-for="(item, index) in newCardItems" :key="index">
+                            <input v-model="item.text" placeholder="Пункт списка" :disabled="isCardLocked" />
+                            <button @click="removeItem(index)" :disabled="isCardLocked" style="background-color: #ff5252; min-width: auto; padding: 8px 12px;">×</button>
+                        </li>
+                    </ul>
+                    <button @click="addItem" :disabled="isCardLocked || newCardItems.length >= 5">+ Добавить пункт</button>
+                    <button @click="addCard" :disabled="isAddCardDisabled" style="margin-top: 15px; font-size: 1.1em;">Создать карточку</button>
+                    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+                </div>
             </div>
         </div>
     `,
     data() {
         return {
+            searchQuery: '', // Переменная для поиска
             columns: [
                 { cards: [], maxCards: 3 },
                 { cards: [], maxCards: 5 },
@@ -112,6 +129,22 @@ Vue.component('notepad', {
                 !this.newCardContent.trim()
             );
         },
+        filteredColumns() {
+            if (!this.searchQuery.trim()) {
+                return this.columns;
+            }
+
+            const query = this.searchQuery.toLowerCase();
+
+            return this.columns.map(col => {
+                return {
+                    ...col,
+                    cards: col.cards.filter(card =>
+                        card.content.toLowerCase().includes(query)
+                    )
+                };
+            });
+        }
     },
     methods: {
         addItem() {

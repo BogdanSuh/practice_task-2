@@ -1,4 +1,3 @@
-
 body {
     background-color: #f0f2f5;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -6,28 +5,25 @@ body {
     padding: 0;
 }
 
-
 .notepad {
     display: flex;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 20px;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-
 .column {
     width: 30%;
-    min-width: 200px;
+    min-width: 250px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
     transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 200px; /* Чтобы колонки не схлопывались */
 }
-
-
 
 .card {
     background-color: #f7f8fa;
@@ -35,14 +31,15 @@ body {
     border-radius: 10px;
     margin-bottom: 15px;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    border: 1px solid #e1e4e8;
 }
-
 
 h3 {
     margin-top: 0;
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: #333;
     font-weight: 600;
+    margin-bottom: 10px;
 }
 
 ul {
@@ -50,62 +47,122 @@ ul {
     padding: 0;
     margin: 10px 0;
 }
+
 li {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+    font-size: 0.95em;
 }
 
+input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
 
 span {
     font-size: 1em;
     color: #555;
+    word-break: break-word;
 }
+
 span.completed {
     text-decoration: line-through;
     color: #999;
 }
 
+/* Стили для создателя карточек */
 .card-creator {
     width: 100%;
-    max-width: 350px;
+    max-width: 400px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin: 0 auto;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
 }
 
 textarea {
     width: 100%;
-    height: 80px;
+    height: 60px;
     padding: 10px;
     font-size: 1em;
     border-radius: 8px;
     border: 1px solid #ccc;
     resize: vertical;
     box-sizing: border-box;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+/* Стили для списка пунктов при создании */
+.card-creator ul li {
+    gap: 10px;
+}
+
+.card-creator input[type="text"] {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
 }
 
 button {
-    margin-top: 12px;
+    margin-top: 8px;
     padding: 10px 15px;
     border-radius: 8px;
     border: none;
     background-color: #4CAF50;
     color: #fff;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 600;
     cursor: pointer;
-    min-width: 150px;
+    transition: background 0.2s;
 }
 
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
 .error-message {
-    color: red;
+    color: #d32f2f;
     margin-top: 10px;
     font-weight: 600;
-    font-size: 0.95em;
+    font-size: 0.9em;
+    background: #ffebee;
+    padding: 8px;
+    border-radius: 6px;
 }
 
+/* Стили для поиска */
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
